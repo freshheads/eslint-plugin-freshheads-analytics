@@ -55,7 +55,7 @@ export const PageBanner: FC = () => {
         "NextLink",
         "IconButton"
     ], // Elements to check for required props
-    alternativeTrackingMethodProps: [
+    eventProps: [
         "onClick",
         "onMouseDown",
         "onMouseUp",
