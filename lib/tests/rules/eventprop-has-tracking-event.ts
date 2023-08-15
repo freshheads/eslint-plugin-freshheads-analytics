@@ -1,6 +1,6 @@
 import { RuleTester } from '@typescript-eslint/rule-tester';
 import rule from '../../rules/eventprop-has-tracking-event';
-import { trackableEvents } from '../../configs';
+import { trackableEvents, trackingFunctionNames } from '../../configs';
 
 //------------------------------------------------------------------------------
 // Tests
@@ -19,7 +19,35 @@ ruleTester.run('eventprop-has-tracking-event', rule, {
             options: [
                 {
                     eventsToTrack: trackableEvents,
-                    trackingFunctionName: 'pushTrackingEvent',
+                    trackingFunctionNames: trackingFunctionNames,
+                },
+            ],
+        },
+        {
+            code: '<Button onClick={() => {pushDataLayer()}}>actie</Button>',
+            parserOptions: {
+                ecmaFeatures: {
+                    jsx: true,
+                },
+            },
+            options: [
+                {
+                    eventsToTrack: trackableEvents,
+                    trackingFunctionNames: trackingFunctionNames,
+                },
+            ],
+        },
+        {
+            code: '<Button onClick={() => {trackEvents.trackingFunction()}}>actie</Button>',
+            parserOptions: {
+                ecmaFeatures: {
+                    jsx: true,
+                },
+            },
+            options: [
+                {
+                    eventsToTrack: trackableEvents,
+                    trackingFunctionNames: trackingFunctionNames,
                 },
             ],
         },
@@ -39,7 +67,7 @@ ruleTester.run('eventprop-has-tracking-event', rule, {
             options: [
                 {
                     eventsToTrack: trackableEvents,
-                    trackingFunctionName: 'pushTrackingEvent',
+                    trackingFunctionNames: trackingFunctionNames,
                 },
             ],
         },
@@ -65,7 +93,7 @@ ruleTester.run('eventprop-has-tracking-event', rule, {
             options: [
                 {
                     eventsToTrack: trackableEvents,
-                    trackingFunctionName: 'pushTrackingEvent',
+                    trackingFunctionNames: trackingFunctionNames,
                 },
             ],
         },
@@ -76,7 +104,7 @@ ruleTester.run('eventprop-has-tracking-event', rule, {
                     messageId: 'default',
                     data: {
                         interactiveProp: 'onClick',
-                        trackingFunctionName: 'pushTrackingEvent',
+                        trackingFunctionNames: trackingFunctionNames,
                     },
                 },
             ],
@@ -88,7 +116,7 @@ ruleTester.run('eventprop-has-tracking-event', rule, {
             options: [
                 {
                     eventsToTrack: trackableEvents,
-                    trackingFunctionName: 'pushTrackingEvent',
+                    trackingFunctionNames: trackingFunctionNames,
                 },
             ],
         },

@@ -7,7 +7,7 @@ import { AST_NODE_TYPES } from '@typescript-eslint/utils';
 import { TSESTree } from '@typescript-eslint/utils';
 import { getProp, getPropValue, hasProp } from 'jsx-ast-utils';
 
-import { trackableEvents } from '../configs';
+import { trackableEvents, trackingFunctionNames } from '../configs';
 import { createRule } from '../utils/createRule';
 import { isIdentifier } from '../utils/ast';
 
@@ -30,13 +30,16 @@ const eventpropHasTrackingEvent = createRule({
                 type: 'object',
                 properties: {
                     eventsToTrack: { type: 'array', items: { type: 'string' } },
-                    trackingFunctionName: { type: 'string' },
+                    trackingFunctionNames: {
+                        type: 'array',
+                        items: { type: 'string' },
+                    },
                 },
             },
         ],
         messages: {
             default:
-                '{{interactiveProp}} is missing "{{trackingFunctionName}}" function',
+                '{{interactiveProp}} needs to call atleast one of "{{trackingFunctionNames}}" functions',
             functionDeclarationNotFound:
                 '{{interactiveProp}} is calling "{{FunctionName}}" this function is outside the scope so can\'t be checked',
         },
@@ -44,13 +47,13 @@ const eventpropHasTrackingEvent = createRule({
     defaultOptions: [
         {
             eventsToTrack: trackableEvents,
-            trackingFunctionName: 'pushTrackingEvent',
+            trackingFunctionNames: trackingFunctionNames,
         },
     ],
 
     create(context) {
         // variables should be defined here
-        const { eventsToTrack, trackingFunctionName } = context.options[0];
+        const { eventsToTrack, trackingFunctionNames } = context.options[0];
 
         //----------------------------------------------------------------------
         // Helpers
@@ -61,26 +64,34 @@ const eventpropHasTrackingEvent = createRule({
         ): string[] => {
             return block.body.reduce(
                 (acc: string[], statement: TSESTree.Statement) => {
+                    let name = '';
                     if (
                         statement.type !== AST_NODE_TYPES.ExpressionStatement ||
                         statement.expression.type !==
-                            AST_NODE_TYPES.CallExpression ||
-                        !isIdentifier(statement.expression.callee)
+                            AST_NODE_TYPES.CallExpression
                     ) {
                         return acc;
                     }
+
+                    if (isIdentifier(statement.expression.callee)) {
+                        name = statement.expression.callee.name;
+                    }
+
                     if (
-                        statement.expression.callee.name ===
-                        trackingFunctionName
+                        statement.expression.callee.type ===
+                            AST_NODE_TYPES.MemberExpression &&
+                        isIdentifier(statement.expression.callee.object)
                     ) {
-                        return [...acc, statement.expression.callee.name];
+                        name = statement.expression.callee.object.name;
+                    }
+
+                    if (trackingFunctionNames.includes(name)) {
+                        return [...acc, name];
                     } else {
-                        if (!statement.expression.callee.name) {
+                        if (!name) {
                             return acc;
                         }
-                        const body = findDeclarationBody(
-                            statement.expression.callee.name
-                        );
+                        const body = findDeclarationBody(name);
                         if (!body) {
                             return acc;
                         }
@@ -162,7 +173,7 @@ const eventpropHasTrackingEvent = createRule({
                     // <Component onClick={pushTrackingEvent()} />
                     if (typeof propValue === 'string') {
                         // check if there is a direct call to the tracking function
-                        if (propValue.includes(trackingFunctionName)) {
+                        if (trackingFunctionNames.includes(propValue)) {
                             return; // prop has the tracking function
                         }
 
@@ -192,7 +203,8 @@ const eventpropHasTrackingEvent = createRule({
                                 messageId: 'default',
                                 data: {
                                     interactiveProp: onEventProp.name.name,
-                                    trackingFunctionName,
+                                    trackingFunctionNames:
+                                        trackingFunctionNames.toString(),
                                 },
                             });
                         }
@@ -230,7 +242,8 @@ const eventpropHasTrackingEvent = createRule({
                                         data: {
                                             interactiveProp:
                                                 onEventProp.name.name,
-                                            trackingFunctionName,
+                                            trackingFunctionNames:
+                                                trackingFunctionNames.toString(),
                                         },
                                     });
                                 }
@@ -245,8 +258,10 @@ const eventpropHasTrackingEvent = createRule({
                                 if (
                                     onEventProp.value.expression.body.callee
                                         .type === AST_NODE_TYPES.Identifier &&
-                                    onEventProp.value.expression.body.callee
-                                        .name === trackingFunctionName
+                                    trackingFunctionNames.includes(
+                                        onEventProp.value.expression.body.callee
+                                            .name
+                                    )
                                 ) {
                                     return; // prop has the tracking function
                                 } else if (
@@ -284,7 +299,8 @@ const eventpropHasTrackingEvent = createRule({
                                             data: {
                                                 interactiveProp:
                                                     onEventProp.name.name,
-                                                trackingFunctionName,
+                                                trackingFunctionNames:
+                                                    trackingFunctionNames.toString(),
                                             },
                                         });
                                     }
@@ -299,7 +315,8 @@ const eventpropHasTrackingEvent = createRule({
                         messageId: 'default',
                         data: {
                             interactiveProp: onEventProp.name.name,
-                            trackingFunctionName,
+                            trackingFunctionNames:
+                                trackingFunctionNames.toString(),
                         },
                     });
                 });
