@@ -1,23 +1,19 @@
 import { RuleTester } from '@typescript-eslint/rule-tester';
-import rule from '../../rules/element-has-required-tracking-props';
+import rule from '../../rules/element-has-required-eventprop';
 
 //------------------------------------------------------------------------------
 // Tests
 //------------------------------------------------------------------------------
 import * as mocha from 'mocha';
-import {
-    interactiveElements,
-    trackableEvents,
-    trackingProps,
-} from '../../configs';
+import { interactiveElements, trackableEvents } from '../../configs';
 
 RuleTester.afterAll = mocha.after;
 const ruleTester = new RuleTester();
 
-ruleTester.run('element-has-required-tracking-props', rule, {
+ruleTester.run('element-has-required-eventprop', rule, {
     valid: [
         {
-            code: '<Button data-track-name="name" data-track-location="here">text</Button>',
+            code: '<Button onClick={() => {console.log("test")}}>text</Button>',
             parserOptions: {
                 ecmaFeatures: {
                     jsx: true,
@@ -26,14 +22,35 @@ ruleTester.run('element-has-required-tracking-props', rule, {
             options: [
                 {
                     elementsToCheck: interactiveElements,
-                    alternativeTrackingMethodProps: trackableEvents,
-                    trackingProps: trackingProps,
+                    eventProps: trackableEvents,
                 },
             ],
         },
     ],
 
     invalid: [
+        {
+            code: '<Button>text</Button>',
+            errors: [
+                {
+                    messageId: 'default',
+                    data: {
+                        requiredProps: 'data-track-location',
+                    },
+                },
+            ],
+            parserOptions: {
+                ecmaFeatures: {
+                    jsx: true,
+                },
+            },
+            options: [
+                {
+                    elementsToCheck: interactiveElements,
+                    eventProps: trackableEvents,
+                },
+            ],
+        },
         {
             code: '<Button data-track-name="name">text</Button>',
             errors: [
@@ -52,8 +69,7 @@ ruleTester.run('element-has-required-tracking-props', rule, {
             options: [
                 {
                     elementsToCheck: interactiveElements,
-                    alternativeTrackingMethodProps: trackableEvents,
-                    trackingProps: trackingProps,
+                    eventProps: trackableEvents,
                 },
             ],
         },
@@ -75,8 +91,7 @@ ruleTester.run('element-has-required-tracking-props', rule, {
             options: [
                 {
                     elementsToCheck: interactiveElements,
-                    alternativeTrackingMethodProps: trackableEvents,
-                    trackingProps: trackingProps,
+                    eventProps: trackableEvents,
                 },
             ],
         },
