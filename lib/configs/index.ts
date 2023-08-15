@@ -26,6 +26,12 @@ export const trackableEvents = [
     'onKeyUp',
 ];
 
+export const trackingFunctionNames = [
+    'pushTrackingEvent',
+    'pushDataLayer',
+    'trackEvents',
+];
+
 const allConfigs = {
     recommended: {
         plugins: ['freshheads-analytics'],
@@ -41,7 +47,7 @@ const allConfigs = {
                 'error',
                 {
                     eventsToTrack: trackableEvents,
-                    trackingFunctionName: 'pushTrackingEvent',
+                    trackingFunctionNames: trackingFunctionNames,
                 },
             ],
         },
