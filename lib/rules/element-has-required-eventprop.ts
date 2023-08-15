@@ -1,27 +1,23 @@
 /**
  * @fileoverview Enforce that interactive elements without
- * its own tracking implementation have all required tracking props
+ * its own tracking implementation have atleast one event prop
  * @author Yannick van Bladel
  */
 
-import { elementType, hasAnyProp, hasProp } from 'jsx-ast-utils';
+import { elementType, hasAnyProp } from 'jsx-ast-utils';
 import { ESLintUtils, TSESTree } from '@typescript-eslint/utils';
-import {
-    interactiveElements,
-    trackableEvents,
-    trackingProps,
-} from '../configs';
+import { interactiveElements, trackableEvents } from '../configs';
 
 //------------------------------------------------------------------------------
 // Rule Definition
 //------------------------------------------------------------------------------
 
-const elementHasRequiredTrackingProps = ESLintUtils.RuleCreator.withoutDocs({
+const elementHasRequiredEventProps = ESLintUtils.RuleCreator.withoutDocs({
     meta: {
         type: 'problem', // `problem`, `suggestion`, or `layout`
         docs: {
             description:
-                'Enforce that interactive elements without its own tracking implementation have all required tracking props',
+                'Enforce that interactive elements without its own tracking implementation have atleast one event prop',
             recommended: 'recommended',
         },
         fixable: 'code', // Or `code` or `whitespace`
@@ -44,24 +40,18 @@ const elementHasRequiredTrackingProps = ESLintUtils.RuleCreator.withoutDocs({
         ],
 
         messages: {
-            default:
-                "Interactive elements that don't have custom events must have the following attribute defined: {{requiredProps}}",
+            default: 'Interactive elements need atleast one event prop',
         },
     },
     defaultOptions: [
         {
             elementsToCheck: interactiveElements,
-            alternativeTrackingMethodProps: trackableEvents,
-            trackingProps: trackingProps,
+            eventProps: trackableEvents,
         },
     ],
 
     create: (context) => {
-        const {
-            elementsToCheck,
-            alternativeTrackingMethodProps,
-            trackingProps,
-        } = context.options[0];
+        const { elementsToCheck, eventProps } = context.options[0];
 
         //----------------------------------------------------------------------
         // Helpers
@@ -75,16 +65,16 @@ const elementHasRequiredTrackingProps = ESLintUtils.RuleCreator.withoutDocs({
                 // make sure the element is one of the elements we want to check
                 return false;
             }
-            if (hasAnyProp(attributes, alternativeTrackingMethodProps)) {
+            if (hasAnyProp(attributes, eventProps)) {
                 // if the element has an alternative tracking method prop, we don't need to check it
                 return false;
             }
             return true;
         };
+
         //----------------------------------------------------------------------
         // Public
         //----------------------------------------------------------------------
-
         return {
             JSXOpeningElement: (node) => {
                 const { attributes } = node;
@@ -92,37 +82,14 @@ const elementHasRequiredTrackingProps = ESLintUtils.RuleCreator.withoutDocs({
                 if (!isElementToCheck(node, attributes)) {
                     return;
                 }
-                // check all props for non-existing tracking props, and report them
-                trackingProps.forEach((trackingProp) => {
-                    if (!hasProp(node.attributes, trackingProp)) {
-                        context.report({
-                            node,
-                            messageId: 'default',
-                            data: {
-                                requiredProps: trackingProp,
-                            },
-                            suggest: [
-                                {
-                                    messageId: 'default',
-                                    data: {
-                                        requiredProps: trackingProp,
-                                    },
-                                    fix: (fixer) => {
-                                        return fixer.insertTextAfter(
-                                            node.attributes[
-                                                attributes.length - 1
-                                            ],
-                                            ` ${trackingProp}=""`
-                                        );
-                                    },
-                                },
-                            ],
-                        });
-                    }
+
+                context.report({
+                    node,
+                    messageId: 'default',
                 });
             },
         };
     },
 });
 
-export default elementHasRequiredTrackingProps;
+export default elementHasRequiredEventProps;

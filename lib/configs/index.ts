@@ -26,18 +26,15 @@ export const trackableEvents = [
     'onKeyUp',
 ];
 
-export const trackingProps = ['data-track-name', 'data-track-location'];
-
 const allConfigs = {
     recommended: {
-        plugins: ['freshheads-analytics-test'],
+        plugins: ['freshheads-analytics'],
         rules: {
-            'freshheads-analytics-test/element-has-required-tracking-props': [
+            'freshheads-analytics/element-has-required-eventprop': [
                 'error',
                 {
-                    trackingProps: trackingProps,
                     elementsToCheck: interactiveElements,
-                    alternativeTrackingMethodProps: trackableEvents,
+                    eventProps: trackableEvents,
                 },
             ],
             'freshheads-analytics-test/eventprop-has-tracking-event': [
