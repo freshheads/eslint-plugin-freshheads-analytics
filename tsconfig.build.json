@@ -1,0 +1,5 @@
+{
+    "extends": "./tsconfig.common",
+    "include": ["lib"],
+    "exclude": ["**/*.test.ts", "**/*.spec.ts", "**/*.test-data.ts", "dist"]
+}

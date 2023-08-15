@@ -1,0 +1,6 @@
+{
+    "extends": "./tsconfig.common",
+    "include": ["lib"],
+    "files": ["lib/typings/index.d.ts"],
+    "exclude": ["dist", "**/*.test-data.ts"]
+}

@@ -1,0 +1,9 @@
+{
+    "extends": "./tsconfig.common",
+    "include": ["lib"],
+    "compilerOptions": {
+        "rootDir": "."
+    },
+
+    "exclude": ["dist", "**/*.test-data.ts"]
+}
