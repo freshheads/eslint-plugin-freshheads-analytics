@@ -34,22 +34,23 @@ export const trackingFunctionNames = [
 
 const allConfigs = {
     recommended: {
-        plugins: ['freshheads-analytics'],
+        plugins: ['@freshheads/freshheads-analytics'],
         rules: {
-            'freshheads-analytics/element-has-required-eventprop': [
+            '@freshheads/freshheads-analytics/element-has-required-eventprop': [
                 'error',
                 {
                     elementsToCheck: interactiveElements,
                     eventProps: trackableEvents,
                 },
             ],
-            'freshheads-analytics-test/eventprop-has-tracking-event': [
-                'error',
-                {
-                    eventsToTrack: trackableEvents,
-                    trackingFunctionNames: trackingFunctionNames,
-                },
-            ],
+            '@freshheads/freshheads-analytics-test/eventprop-has-tracking-event':
+                [
+                    'error',
+                    {
+                        eventsToTrack: trackableEvents,
+                        trackingFunctionNames: trackingFunctionNames,
+                    },
+                ],
         },
     },
 };
