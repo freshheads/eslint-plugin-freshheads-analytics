@@ -24,7 +24,7 @@ add `plugin:freshheads-analytics/recommended` to te extends section of your `.es
 
 ```json
 {
-    "extends": ["plugin:freshheads-analytics/recommended"]
+    "extends": ["plugin:@freshheads/freshheads-analytics/recommended"]
 }
 ```
 
@@ -34,7 +34,7 @@ Add `freshheads-analytics` to the plugins section of your `.eslintrc` configurat
 
 ```json
 {
-    "plugins": ["freshheads-analytics"]
+    "plugins": ["@freshheads/freshheads-analytics"]
 }
 ```
 
@@ -43,7 +43,7 @@ Then configure the rules you want to use under the rules section.
 ```json
 {
     "rules": {
-        "freshheads-analytics/element-has-required-eventprop": [
+        "@freshheads/freshheads-analytics/element-has-required-eventprop": [
             "error",
             {
                 "elementsToCheck": [
@@ -74,7 +74,7 @@ Then configure the rules you want to use under the rules section.
                 ]
             }
         ],
-        "freshheads-analytics/eventprop-has-tracking-event": [
+        "@freshheads/freshheads-analytics/eventprop-has-tracking-event": [
             "error",
             {
                 "eventsToTrack": [
