@@ -1,6 +1,6 @@
 {
     "name": "@freshheads/eslint-plugin-freshheads-analytics",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "description": "make sure we track all user events",
     "keywords": [
         "eslint",

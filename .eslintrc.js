@@ -1,4 +1,5 @@
 module.exports = {
+    root: true,
     env: {
         es2021: true,
         node: true,
@@ -11,8 +12,6 @@ module.exports = {
         'plugin:unicorn/recommended',
         'prettier',
     ],
-    ignorePatterns: ['**/jest.config.ts'],
-
     parser: '@typescript-eslint/parser',
     parserOptions: {
         tsconfigRootDir: __dirname,
