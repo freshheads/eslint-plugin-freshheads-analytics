@@ -43,7 +43,7 @@ Then configure the rules you want to use under the rules section.
 ```json
 {
     "rules": {
-        "@freshheads/freshheads-analytics/element-has-required-eventprop": [
+        "freshheads-analytics/element-has-required-eventprop": [
             "error",
             {
                 "elementsToCheck": [
@@ -74,7 +74,7 @@ Then configure the rules you want to use under the rules section.
                 ]
             }
         ],
-        "@freshheads/freshheads-analytics/eventprop-has-tracking-event": [
+        "freshheads-analytics/eventprop-has-tracking-event": [
             "error",
             {
                 "eventsToTrack": [
