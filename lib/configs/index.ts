@@ -36,14 +36,14 @@ const allConfigs = {
     recommended: {
         plugins: ['@freshheads/freshheads-analytics'],
         rules: {
-            'freshheads-analytics/element-has-required-eventprop': [
+            '@freshheads/freshheads-analytics/element-has-required-eventprop': [
                 'error',
                 {
                     elementsToCheck: interactiveElements,
                     eventProps: trackableEvents,
                 },
             ],
-            'freshheads-analytics-test/eventprop-has-tracking-event': [
+            '@freshheads/freshheads-analytics/eventprop-has-tracking-event': [
                 'error',
                 {
                     eventsToTrack: trackableEvents,
